@@ -57,6 +57,7 @@ footer {
   min-width: 28rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
+  flex-wrap: wrap;
 }
 
 h1 {
@@ -132,7 +133,6 @@ small {
   align-items: center;
   display: flex;
   max-width: 70rem;
-  min-width: 32rem;
 }
 
 .nav-list {
@@ -182,7 +182,7 @@ small {
 
 .about_text {
   animation: 0.5s linear 0.5s 1 normal forwards running fadein;
-  max-width: 43rem;
+  max-width: 38rem;
   opacity: 0;
 }
 
@@ -228,7 +228,7 @@ small {
   /* About */
 
   .about_text {
-    max-width: 35rem;
+    max-width: 31rem;
   }
 }
 
