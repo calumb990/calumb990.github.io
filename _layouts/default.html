@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>{{ page.title }}</title>
+    <script src="scripts/main.js" defer></script>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <h2>{{ page.title }}</h2>
+        <ul class="nav-list">
+          <li class="nav-list_item"><a href="about" class="nav-list_item">About</a></li>
+          <li class="nav-list_item"><a href="projects" class="nav-list_item">Projects</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      {{ content }}
+    </main>
+    <footer>
+      <p><small>Built (quickly) with Jekyll.</small></p>
+      <p><small>Copyright 2024 - CalumB990</small></p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,246 @@
+---
+---
+
+/* Root */
+
+:root {
+  font-size: 62.5%;
+}
+
+/* Elements */
+
+html, body {
+  height: 100vh;
+  margin: 0px;
+  min-width: 36rem;  
+  overflow: auto;
+  width: 100vw;
+}
+
+body {
+  background-color: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  font-family: "Coiny";
+}
+
+header {
+  border-bottom: 0.5rem solid white;
+  flex: none;
+  margin-inline: auto;
+  margin-top: 5rem;
+  max-width: 70rem;
+  padding: 1rem 0rem;
+  width: calc(100% - 4rem);
+}
+
+main {
+  flex: 1 1 0%;
+  margin-inline: auto;
+  max-width: 70rem;
+  padding: 1rem 0rem;
+  width: calc(100% - 4em);
+}
+
+footer {
+  border-top: 0.5rem solid white;
+  display: flex;
+  flex: none;
+  justify-content: space-between;
+  margin-bottom: 5rem;
+  margin-inline: auto;
+  max-width: 70rem;
+  padding: 1rem 0rem;
+  width: calc(100% - 4rem);
+}
+
+h1 {
+  font-size: 4rem;
+  margin: 0px;
+}
+
+h2 {
+  font-size: 3.2rem;
+  margin: 0px;
+}
+
+h3 {
+  font-size: 2.8rem;
+  margin: 0px;
+}
+
+ul {
+  padding: 0px;
+}
+
+li {
+  font-family: "Ubuntu";
+  font-size: 2rem;
+}
+
+a {
+  color: white;
+  fill: white;
+  margin: 0px;
+  outline-style: none;
+}
+
+a:hover {
+  color: green;
+  fill: green;
+}
+
+a:focus {
+  color: green;
+  fill: green;
+}
+
+a.rendered {
+  transition: fill 0.2s;
+  transition: color 0.2s;
+}
+
+svg {
+  fill: inherit;
+  transition: fill 0.2s;
+}
+
+p {
+  font-family: "Ubuntu";
+  font-size: 2rem;
+  line-height: 150%;
+  margin-block: 1rem;
+}
+
+p:has(small) {
+  line-height: 120%;
+  margin: 0px;
+}
+
+small {
+  font-size: 80%;
+}
+
+/* Header */
+
+.nav {
+  align-items: center;
+  display: flex;
+  max-width: 70rem;
+  min-width: 32rem;
+}
+
+.nav-list {
+  display: inline-flex;
+  gap: 3rem;
+  justify-content: space-between;
+  margin: 0px 0px 0px auto;
+  padding: 0px;
+}
+
+.nav-list_item {
+  list-style: none;
+}
+
+/* Error */
+
+.error {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 3rem);
+  justify-content: center;
+  margin-inline: auto;
+  text-align: center;
+  width: 100%;
+}
+
+/* About */
+
+.about {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  margin-inline: auto;
+  padding-block: 5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.about_title {
+  animation: 0.5s linear 0s 1 normal forwards running fadein;
+  opacity: 0;
+}
+
+.about_text {
+  animation: 0.5s linear 0.5s 1 normal forwards running fadein;
+  max-width: 50rem;
+  opacity: 0;
+}
+
+.contact {
+  animation: 0.5s linear 1s 1 normal forwards running fadein;
+  margin-top: 1rem;
+  opacity: 0;
+}
+
+.icons {
+  align-items: center;
+  display: flex;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+/* Media queries */
+
+@media (max-width: 31.25rem) {
+  h1 {
+    font-size: 3.2rem;
+  }
+
+  h2 {
+    font-size: 2.4rem;
+  }
+
+  h3 {
+    font-size: 2rem;
+  }
+
+  li {
+    font-size: 1.6rem;
+  }
+
+  p {
+    font-size: 1.6rem;
+  }
+}
+
+/* Animations */
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+
+  to {
+    opacity: 100;
+    transform: translateY(-1rem);
+  }
+}
+
+/* Fonts */
+
+@font-face {
+  font-family: "Coiny";
+  src: url("../fonts/Coiny-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Ubuntu";
+  src: url("../fonts/Ubuntu-Regular.ttf");
+}
