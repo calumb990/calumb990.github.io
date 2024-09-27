@@ -5,6 +5,7 @@
 
 :root {
   font-size: 62.5%;
+  color-scheme: dark;
 }
 
 /* Elements */
@@ -12,7 +13,7 @@
 html, body {
   height: 100vh;
   margin: 0px;
-  min-width: 36rem;  
+  min-width: 38rem;
   overflow: auto;
   width: 100vw;
 }
@@ -31,6 +32,7 @@ header {
   margin-inline: auto;
   margin-top: 5rem;
   max-width: 70rem;
+  min-width: 34rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
 }
@@ -39,8 +41,9 @@ main {
   flex: 1 1 0%;
   margin-inline: auto;
   max-width: 70rem;
+  min-width: 34rem;
   padding: 1rem 0rem;
-  width: calc(100% - 4em);
+  width: calc(100% - 4rem);
 }
 
 footer {
@@ -53,6 +56,7 @@ footer {
   max-width: 70rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
+  min-width: 34rem;
 }
 
 h1 {
@@ -178,7 +182,7 @@ small {
 
 .about_text {
   animation: 0.5s linear 0.5s 1 normal forwards running fadein;
-  max-width: 50rem;
+  max-width: 43rem;
   opacity: 0;
 }
 
