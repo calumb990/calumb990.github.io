@@ -4,8 +4,8 @@
 /* Root */
 
 :root {
-  font-size: 62.5%;
   color-scheme: dark;
+  font-size: 62.5%;
 }
 
 /* Elements */
@@ -13,7 +13,7 @@
 html, body {
   height: 100vh;
   margin: 0px;
-  min-width: 38rem;
+  min-width: 32rem;
   overflow: auto;
   width: 100vw;
 }
@@ -32,7 +32,7 @@ header {
   margin-inline: auto;
   margin-top: 5rem;
   max-width: 70rem;
-  min-width: 34rem;
+  min-width: 28rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
 }
@@ -41,7 +41,7 @@ main {
   flex: 1 1 0%;
   margin-inline: auto;
   max-width: 70rem;
-  min-width: 34rem;
+  min-width: 28rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
 }
@@ -54,9 +54,9 @@ footer {
   margin-bottom: 5rem;
   margin-inline: auto;
   max-width: 70rem;
+  min-width: 28rem;
   padding: 1rem 0rem;
   width: calc(100% - 4rem);
-  min-width: 34rem;
 }
 
 h1 {
@@ -202,6 +202,9 @@ small {
 /* Media queries */
 
 @media (max-width: 31.25rem) {
+
+  /* Elements */
+
   h1 {
     font-size: 3.2rem;
   }
@@ -220,6 +223,12 @@ small {
 
   p {
     font-size: 1.6rem;
+  }
+
+  /* About */
+
+  .about_text {
+    max-width: 35rem;
   }
 }
 
