@@ -46,49 +46,22 @@ class Tensor {
         }
 
         // Retrieve the column to be indexed
-        return new TensorView(
-            this.shape.slice(indices.length),
-            this._data.subarray(index, index + this._strides.at(-1))
-        );
+        return this._data.slice(index, index + this._strides.at(-1));
     }
 }
-
-class TensorView {
-    /** @type {Tensor} */ #tensor
-
-    constructor(tensor) {
-        this.#tensor = tensor;
-    }
-
-    at(indices) {
-        this.#tensor.at(indices);
-    }
-
-    add(tensor) {
-        this.#tensor.add(tensor);
-    }
-
-    s_mul(scalar) {
-        this.#tensor.s_mul(scalar);
-    }
-
-    v_mul(vector) {
-        this.#tensor.v_mul(vector);
-    }
-}
-
 
 class NumTensor extends Tensor {
 
-    constructor(tensor, requires_grad = false) {
-        super(tensor, requires_grad);
+    constructor(shape, data = null) {
+        super(shape, data);
 
-        // Initialise to zeroes
-        this._data.fill(0);
+        if (!data) {
+            this._data.fill(0);
+        }
     }
 
     add(tensor) {
-        const result = new Tensor(this.shape);
+        const result = new NumTensor(this.shape);
 
         for (let i = 0; i < result._data.length; i++) {
             result._data[i] = this._data[i] + tensor._data[i];
@@ -97,17 +70,17 @@ class NumTensor extends Tensor {
         return result;
     }
 
-    add_mut(tensor) {
+    #add_fast(array1, array2) {
 
-        for (let i = 0; i < result._data.length; i++) {
-            this._data[i] += tensor._data[i];
+        for (let i = 0; i < array1.length; i++) {
+            array1[i] += array2[i];
         }
 
-        return this;
+        return array1;
     }
 
     s_mul(scalar) {
-        let result = new Tensor(this.shape);
+        let result = new NumTensor(this.shape);
 
         for (let i = 0; i < result._data.length; i++) {
             result._data[i] = this._data[i] * scalar;
@@ -116,38 +89,28 @@ class NumTensor extends Tensor {
         return result;
     }
 
-    s_mul_mut(scalar) {
-
-        for (let i = 0; i < result._data.length; i++) {
-            this._data[i] *= scalar;
+    #s_mul_fast(array, scalar) {
+        
+        for (let i = 0; i < array.length; i++) {
+            array[i] *= scalar;
         }
 
-        return this;
+        return array;
     }
 
     v_mul(vector) {
-        let result = new NumTensor(this.shape.slice(1));
+        let result = new NumTensor(this.shape.slice(1));        
 
         // slice, scale and sum each sub-tensor
         for (let i = 0; i < this.shape[0]; i++) {
-            result.add_mut(this.at([i]).s_mul_mut(vector[i]));
+            result.#add_fast(result._data, this.#s_mul_fast(this.at([i]), vector[i]));
         }
 
         return result;
     }
 
-    v_mul_mut(vector) {
-
-        // slice, scale and sum each sub-tensor
-        for (let i = 0; i < this.shape[0]; i++) {
-            this.add_mut(this.at([i]).s_mul_mut(vector[i]));
-        }
-
-        return this;
-    }
-
     t_mul(tensor) {
-        const result = new NumTensor(this.shape.slice(0, -1) + tensor.shape.slice(1));
+        const result = new NumTensor([...this.shape.slice(0, -1), ...tensor.shape.slice(1)]);
 
         let vRow = 0;
         let rRow = 0;
@@ -155,14 +118,10 @@ class NumTensor extends Tensor {
         const vIdx = this._strides[this.shape.length-1];
         const rIdx = result._strides[this.shape.length-1];
 
-        while (vRow < this._data.length) {
+        while (vRow < this._data.length && rRow < result._data.length) {
             const vectorData = this._data.subarray(vRow, (vRow += vIdx));
             const resultData = result._data.subarray(rRow, (rRow += rIdx));
-
-            const one = new Tensor([vector.length], vectorData);
-            const two = new Tensor(tensor.shape.slice(1), resultData);
-
-            two.add_mut(tensor.v_mul_mut(one))
+            this.#add_fast(resultData, tensor.v_mul(vectorData)._data);
         }
 
         return result;
