@@ -10,10 +10,10 @@ class Tensor {
         this.shape = shape;
 
         // Initialise the 1D strides array
-        this._strides = new Array(shape.length).fill(1);
+        this._strides = new Array(shape.length+1).fill(1);
         this._strides[shape.length-1] = shape[shape.length-1];
 
-        for (let i = this._strides.length - 2; i >= 0; i--) {
+        for (let i = this._strides.length - 3; i >= 0; i--) {
             this._strides[i] = this._strides[i+1] * shape[i];
         }
 
@@ -36,17 +36,17 @@ class Tensor {
         }
 
         // Calculate the index from _strides
-        for (let i = 0; i < indices.length-1; i++) {
+        for (let i = 0; i < indices.length; i++) {
             index += this._strides[i] * indices[i];
         }
 
         // If only a part of the array, return 
         if (indices.length === this.shape.length) {
-            return this._data[index + indices.at(-1)];
+            return this._data[index];
         }
 
         // Retrieve the column to be indexed
-        return this._data.slice(index, index + this._strides.at(-1));
+        return this._data.slice(index, index + this._strides[indices.length-1]);
     }
 }
 
@@ -115,8 +115,8 @@ class NumTensor extends Tensor {
         let vRow = 0;
         let rRow = 0;
 
-        const vIdx = this._strides[this.shape.length-1];
-        const rIdx = result._strides[this.shape.length-1];
+        const vIdx = this._strides[this.shape.length-2];
+        const rIdx = result._strides[this.shape.length-2];
 
         while (vRow < this._data.length && rRow < result._data.length) {
             const vectorData = this._data.subarray(vRow, (vRow += vIdx));
@@ -128,4 +128,4 @@ class NumTensor extends Tensor {
     }
 }
 
-export { Tensor, DuelTensor, NumTensor };
+export { Tensor, NumTensor };
