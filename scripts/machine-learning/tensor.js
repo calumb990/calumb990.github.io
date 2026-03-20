@@ -1,3 +1,20 @@
+/**
+ * Swap and copy
+ * 
+ * @param {*} array 
+ * @param {*} i 
+ * @param {*} j 
+ * @returns 
+ */
+function swappy(array, i, j) {
+    const copy = [...array];
+
+    copy[i] = array[j];
+    copy[j] = array[i];
+
+    return copy;
+}
+
 class Tensor {
     /** @type {number[]} */ _strides;
     /** @type {Float32Array} */ _data;
@@ -48,6 +65,34 @@ class Tensor {
         // Retrieve the column to be indexed
         return this._data.slice(index, index + this._strides[indices.length-1]);
     }
+
+    permute(dim1, dim2) {
+
+        // Compute which axis corresponds to the upper and lower
+        const [upper, lower] = dim1 < dim2 ? [dim1, dim2] : [dim1, dim2];
+
+        // Calculate the sizes of the the upper and lower blocks
+        const us = this._strides[upper], ups = us * this.shape[upper];
+        const ls = this._strides[lower], lps = ls * this.shape[lower];
+
+        // Initialise a new tensor with each shape axis' swapped
+        const result = new Tensor(swappy(this.shape, upper, lower))
+
+        // `i` tracks the index of iterated through upper blocks
+        for (let i = 0, w = 0; i < result._data.length; i += ups) {
+
+            // `pointer` tracks the index of the next slice offset
+            for (let pointer = i; pointer < i + lps; pointer += ls) {
+
+                // `j` tracks the index of the lower slices to copy
+                for (let j = pointer; j < i + ups; j += lps, w += ls) {
+                    result._data.set(this._data.subarray(j, j + ls), w);
+                }
+            }
+        }
+
+        return result;
+    }
 }
 
 class NumTensor extends Tensor {
@@ -61,7 +106,7 @@ class NumTensor extends Tensor {
     }
 
     add(tensor) {
-        const result = new NumTensor(this.shape);
+        const result = new NumTensor([...this.shape]);
 
         for (let i = 0; i < result._data.length; i++) {
             result._data[i] = this._data[i] + tensor._data[i];
@@ -80,7 +125,7 @@ class NumTensor extends Tensor {
     }
 
     s_mul(scalar) {
-        let result = new NumTensor(this.shape);
+        let result = new NumTensor([...this.shape]);
 
         for (let i = 0; i < result._data.length; i++) {
             result._data[i] = this._data[i] * scalar;
@@ -112,15 +157,14 @@ class NumTensor extends Tensor {
     t_mul(tensor) {
         const result = new NumTensor([...this.shape.slice(0, -1), ...tensor.shape.slice(1)]);
 
-        let vRow = 0;
-        let rRow = 0;
+        //
+        const iStep = this._strides[this.shape.length - 2];
+        const jStep = result._strides[this.shape.length - 2];
 
-        const vIdx = this._strides[this.shape.length-2];
-        const rIdx = result._strides[this.shape.length-2];
-
-        while (vRow < this._data.length && rRow < result._data.length) {
-            const vectorData = this._data.subarray(vRow, (vRow += vIdx));
-            const resultData = result._data.subarray(rRow, (rRow += rIdx));
+        //
+        for (let i = 0, j = 0; i < this._data.length;) {
+            const vectorData = this._data.subarray(i, (i += iStep));
+            const resultData = result._data.subarray(j, (j += jStep));
             this.#add_fast(resultData, tensor.v_mul(vectorData)._data);
         }
 
