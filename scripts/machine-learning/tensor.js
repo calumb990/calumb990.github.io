@@ -67,31 +67,36 @@ class Tensor {
     }
 
     permute(dim1, dim2) {
+        const result = new Tensor(swappy(this.shape, dim1, dim2));
 
-        // Compute which axis corresponds to the upper and lower
-        const [upper, lower] = dim1 < dim2 ? [dim1, dim2] : [dim1, dim2];
+        for (let i = 0; i < this._data.length; i++) {
+            const indices = this.#reverse(i);
 
-        // Calculate the sizes of the the upper and lower blocks
-        const us = this._strides[upper], ups = us * this.shape[upper];
-        const ls = this._strides[lower], lps = ls * this.shape[lower];
+            [indices[dim1], indices[dim2]] = [indices[dim2], indices[dim1]];
 
-        // Initialise a new tensor with each shape axis' swapped
-        const result = new Tensor(swappy(this.shape, upper, lower))
+            // Set at the result array
+            let index = 0;
 
-        // `i` tracks the index of iterated through upper blocks
-        for (let i = 0, w = 0; i < result._data.length; i += ups) {
-
-            // `pointer` tracks the index of the next slice offset
-            for (let pointer = i; pointer < i + lps; pointer += ls) {
-
-                // `j` tracks the index of the lower slices to copy
-                for (let j = pointer; j < i + ups; j += lps, w += ls) {
-                    result._data.set(this._data.subarray(j, j + ls), w);
-                }
+            // Calculate the index from _strides
+            for (let i = 0; i < indices.length; i++) {
+                index += result._strides[i] * indices[i];
             }
+
+            result._data[index] = this._data[i];
         }
 
         return result;
+    }
+
+    #reverse(index) {
+        let indices = []
+
+        for (let i = 0; i < this.shape.length; i++) {
+            indices.push(Math.floor(index / this._strides[i]));
+            index %= this._strides[i];
+        }
+
+        return indices;
     }
 }
 
