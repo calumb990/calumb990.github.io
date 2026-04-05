@@ -1,27 +1,27 @@
-import { LayerFunction, ReverseFunction } from "../../autodiff/reverse-function";
-import { NumTensor } from "../../tensor";
+import { LayerFunction, ReverseFunction } from "../../autodiff/reverse-function.js";
+import { NumTensor } from "../../tensor.js";
 
-
-class LinearLayer extends LayerFunction {
+export class LinearLayer extends LayerFunction {
     /** @type {NumTensor} */ #weights;
 
     /** 
      * @param {ReverseFunction} composite 
     */
-    constructor(composite, inFeatures, outFeatures) {
-        super(composite);
+    constructor(inFeatures, outFeatures) {
+        super();
 
         this.inFeatures = inFeatures;
         this.outFeatures = outFeatures;
 
         this.#weights = new NumTensor([outFeatures, inFeatures]);
+        this.#weights._data = this.#weights._data.fill(1);
     }
 
     forwards(vector) {
-        return super.forwards(this.#weights.v_mul(vector));
+        return super.forwards(this.#weights.t_mul(vector));
     }
     
     backwards() {
-        return this.#weights.permute(1, 0).v_mul(super.backwards());
+        return this.#weights.permute(1, 0).t_mul(super.backwards());
     }
 }

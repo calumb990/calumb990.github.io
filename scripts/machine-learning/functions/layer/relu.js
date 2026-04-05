@@ -1,11 +1,7 @@
-import { LayerFunction } from "../../autodiff/reverse-function";
-import { NumTensor } from "../../tensor";
+import { LayerFunction } from "../../autodiff/reverse-function.js";
+import { NumTensor } from "../../tensor.js";
 
-class ReLU extends LayerFunction {
-
-    constructor(composite) {
-        super(composite);
-    }
+export class ReLU extends LayerFunction {
 
     forwards(tensor) {
         const result = new NumTensor(tensor.shape);
@@ -18,12 +14,12 @@ class ReLU extends LayerFunction {
     }
 
     backwards() {
-        const result = new NumTensor(this.cache.shape);
+        const result = super.backwards();
 
         for (let i = 0; i < result._data.length; i++) {
-            result._data[i] = this.cache._data[i] <= 0 ? 0 : 1;
+            result._data[i] = Math.max(0, result._data[i]);
         }
 
-        return result.v_mul(super.backwards());
+        return result;
     }
 }

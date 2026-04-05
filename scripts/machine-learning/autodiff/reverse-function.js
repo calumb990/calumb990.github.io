@@ -1,6 +1,7 @@
-import { NumTensor } from "../tensor";
+import { NumTensor } from "../tensor.js";
 
 class ReverseFunction {
+
     /**
      * The cache
      * 
@@ -18,10 +19,7 @@ class LayerFunction extends ReverseFunction {
      */
     #composite;
 
-    /**
-     * @param {ActivationFunction} activation
-     */
-    constructor(composite) {
+    set composite(composite) {
         this.#composite = composite;
     }
 
@@ -46,8 +44,9 @@ class LossFunction extends ReverseFunction {
      * @param {NumTensor} expected 
      */
     constructor(expected) {
+        super();
         this.expected = expected;
     }
 }
 
-export { LayerFunction, LossFunction };
+export { ReverseFunction, LayerFunction, LossFunction };

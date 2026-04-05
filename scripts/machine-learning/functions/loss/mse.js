@@ -1,7 +1,7 @@
-import { LossFunction } from "../../autodiff/reverse-function";
+import { LossFunction } from "../../autodiff/reverse-function.js";
+import { NumTensor } from "../../tensor.js";
 
-// actual vs expected
-class MSE extends LossFunction {
+export class MSE extends LossFunction {
 
     constructor(expected) {
         super(expected);
@@ -10,10 +10,12 @@ class MSE extends LossFunction {
     forwards(tensor) {
         this.predicted = tensor;
 
-        return Math.pow(tensor - this.expected, 2);
+        return tensor.sub(this.expected).pow(2).average;
     }
 
     backwards() {
-        return 2 * (this.expected - this.predicted);
+        const n = this.predicted.shape[0];
+
+        return this.predicted.sub(this.expected).s_mul(2 / n);
     }
 }
