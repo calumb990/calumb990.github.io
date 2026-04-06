@@ -1,5 +1,4 @@
 import { LossFunction } from "../../autodiff/reverse-function.js";
-import { NumTensor } from "../../tensor.js";
 
 export class MSE extends LossFunction {
 

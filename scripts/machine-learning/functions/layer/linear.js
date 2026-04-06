@@ -18,10 +18,16 @@ export class LinearLayer extends LayerFunction {
     }
 
     forwards(vector) {
+        this.forwardsCache = vector;
+
         return super.forwards(this.#weights.t_mul(vector));
     }
     
     backwards() {
         return this.#weights.permute(1, 0).t_mul(super.backwards());
+    }
+
+    cacheBackwards(gradient) {
+        return gradient.outer(this.forwardsCache);
     }
 }

@@ -1,14 +1,6 @@
 import { NumTensor } from "../tensor.js";
 
-class ReverseFunction {
-
-    /**
-     * The cache
-     * 
-     * @type {NumTensor}
-     */
-    forwardsCache;
-}
+class ReverseFunction {}
 
 class LayerFunction extends ReverseFunction {
 
@@ -19,6 +11,20 @@ class LayerFunction extends ReverseFunction {
      */
     #composite;
 
+    /**
+     * The forwards cache
+     * 
+     * @type {NumTensor}
+     */
+    forwardsCache;
+
+    /**
+     * The backwards cache
+     * 
+     * @type {NumTensor}
+     */
+    backwardsCache;
+
     set composite(composite) {
         this.#composite = composite;
     }
@@ -26,14 +32,18 @@ class LayerFunction extends ReverseFunction {
     /**
      * @param {NumTensor} tensor 
      */
-    forwards(tensor) {
-        this.forwardsCache = tensor;
-
+    forwards(tensor) {        
         return this.#composite.forwards(tensor);
     }
 
     backwards() {
-        return this.#composite.backwards();
+        const gradient = this.#composite.backwards();
+        this.backwardsCache = this.cacheBackwards(gradient);
+        return gradient;
+    }
+
+    cacheBackwards(gradient) {
+        return undefined;
     }
 }
 

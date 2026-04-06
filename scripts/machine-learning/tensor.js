@@ -187,17 +187,24 @@ class NumTensor extends Tensor {
     t_mul(tensor) {
         const result = new NumTensor([...this.shape.slice(0, -1), ...tensor.shape.slice(1)]);
 
-        // iStep steps over each row in the original tensor
         const iStep = this._strides.at(-1) * this.shape.at(-1);
-
-        // jStep is the step to insert the vector into the result
-        const jStep = result._strides[result.shape.length - tensor.shape.length];
-
-        //
+        const jStep = result._strides.at(-tensor.shape.length);
+        
         for (let i = 0, j = 0; i < this._data.length;) {
             const vectorData = this._data.subarray(i, (i += iStep));
             const resultData = result._data.subarray(j, (j += jStep));
             this.#add_fast(resultData, tensor.v_row_mul(vectorData)._data);
+        }
+
+        return result;
+    }
+
+    outer(tensor) {
+        const result = new NumTensor([...this.shape, ...tensor.shape]);
+        
+        for (let i = 0, j = 0; i < this._data.length; i++) {
+            const resultData = result._data.subarray(j, (j += tensor._data.length));
+            this.#add_fast(resultData, this.#s_mul_fast([...tensor._data], this._data[i]));
         }
 
         return result;
