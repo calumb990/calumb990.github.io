@@ -1,7 +1,7 @@
-import { LayerFunction, ReverseFunction } from "../../autodiff/reverse-function.js";
+import { ReverseFunction, WeightedReverseFunction } from "../../autodiff/reverse-function.js";
 import { NumTensor } from "../../tensor.js";
 
-export class LinearLayer extends LayerFunction {
+export class LinearLayer extends WeightedReverseFunction {
     /** @type {NumTensor} */ #weights;
 
     /** 
@@ -18,8 +18,7 @@ export class LinearLayer extends LayerFunction {
     }
 
     forwards(vector) {
-        this.forwardsCache = vector;
-
+        debugger;
         return super.forwards(this.#weights.t_mul(vector));
     }
     

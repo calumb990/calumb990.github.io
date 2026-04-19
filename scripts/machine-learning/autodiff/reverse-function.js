@@ -1,8 +1,6 @@
 import { NumTensor } from "../tensor.js";
 
-class ReverseFunction {}
-
-class LayerFunction extends ReverseFunction {
+class ReverseFunction {
 
     /**
      * The activation function
@@ -11,39 +9,74 @@ class LayerFunction extends ReverseFunction {
      */
     #composite;
 
+    set composite(composite) {
+        this.#composite = composite;
+    }
+
     /**
      * The forwards cache
      * 
      * @type {NumTensor}
      */
-    forwardsCache;
+    #forwardsCache;
+
+    get forwardsCache() {
+        return this.#forwardsCache;
+    }
+
+    /**
+     * Defines the forward method hooks
+     */
+    constructor() {
+        const forwards = this.forwards;
+
+        this.forwards = (tensor) => {
+            this.#forwardsCache = tensor;
+            return forwards.call(this, tensor);
+        }
+    }
+
+    /**
+     * @param {NumTensor} tensor 
+     */
+    forwards(tensor) {
+        return this.#composite.forwards(tensor);
+    }
+
+    backwards() {
+        return this.#composite.backwards();
+    }
+}
+
+class WeightedReverseFunction extends ReverseFunction {
 
     /**
      * The backwards cache
      * 
      * @type {NumTensor}
      */
-    backwardsCache;
+    #backwardsCache;
 
-    set composite(composite) {
-        this.#composite = composite;
+    get backwardsCache() {
+        return this.#backwardsCache;
     }
 
     /**
-     * @param {NumTensor} tensor 
+     * 
+     * @returns 
      */
-    forwards(tensor) {        
-        return this.#composite.forwards(tensor);
-    }
-
     backwards() {
-        const gradient = this.#composite.backwards();
-        this.backwardsCache = this.cacheBackwards(gradient);
+        const gradient = super.backwards();
+
+        // Compute the dL / dw gradients of the function
+        this.#backwardsCache = this.cacheBackwards(gradient);
+
+        // Return the dL / da gradients for the caller
         return gradient;
     }
 
     cacheBackwards(gradient) {
-        return undefined;
+        throw new Error("cacheBackwards() must be implemented by subclass");
     }
 }
 
@@ -59,4 +92,4 @@ class LossFunction extends ReverseFunction {
     }
 }
 
-export { ReverseFunction, LayerFunction, LossFunction };
+export { ReverseFunction, WeightedReverseFunction, LossFunction };

@@ -1,11 +1,9 @@
-import { LayerFunction } from "../../autodiff/reverse-function.js";
+import { ReverseFunction } from "../../autodiff/reverse-function.js";
 import { NumTensor } from "../../tensor.js";
 
-export class ReLU extends LayerFunction {
+export class ReLU extends ReverseFunction {
 
     forwards(tensor) {
-        this.forwardsCache = tensor;
-
         const result = new NumTensor(tensor.shape);
 
         for (let i = 0; i < result._data.length; i++) {
@@ -22,7 +20,6 @@ export class ReLU extends LayerFunction {
             result._data[i] = Math.max(0, result._data[i]);
         }
 
-        debugger;
         return result;
     }
 }
