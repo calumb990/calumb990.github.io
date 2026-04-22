@@ -1,10 +1,15 @@
-import { LossFunction } from "../../autodiff/reverse-function.js";
-
-export class MSE extends LossFunction {
+/**
+ * Mean Squared Error (MSE) loss function.
+ * 
+ * Definition: `(1/n) * sum_{i=1 to n} (ye_i - yp_i)^2`
+ */
+export class MSE {
 
     constructor(expected) {
-        super(expected);
+        this.expected = expected;
     }
+
+    step() {}
 
     forwards(tensor) {
         this.predicted = tensor;

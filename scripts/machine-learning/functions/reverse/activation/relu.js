@@ -1,6 +1,11 @@
-import { ReverseFunction } from "../../autodiff/reverse-function.js";
-import { NumTensor } from "../../tensor.js";
+import { ReverseFunction } from "../reverse.js";
+import { NumTensor } from "../../../tensor.js";
 
+/**
+ * Rectified Linear Unit (ReLU) activation function.
+ * 
+ * Definition: `f(x) = max(0, x)`
+ */
 export class ReLU extends ReverseFunction {
 
     forwards(tensor) {

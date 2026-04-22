@@ -1,13 +1,10 @@
-import { ReverseFunction } from "./autodiff/reverse-function.js";
-import { LinearLayer } from "./functions/layer/linear.js";
-
+import { ReverseFunction } from "./functions/reverse/reverse.js";
 
 export class Module {
     
     /**
      * 
      * @param {ReverseFunction[]} composites 
-     * @returns {LinearLayer}
      */
     static sequential(...composites) {
 

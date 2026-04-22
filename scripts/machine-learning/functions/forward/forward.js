@@ -1,4 +1,4 @@
-import { DuelTensor, Tensor } from "../tensor.js";
+import { DuelTensor, Tensor } from "../../tensor.js";
 
 class Duel {
 
