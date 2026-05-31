@@ -162,6 +162,16 @@ class NumTensor extends Tensor {
         return result;
     }
 
+    hadamard(tensor) {
+        let result = new NumTensor([this._data.length]);
+
+        for (let i = 0; i < result._data.length; i++) {
+            result._data[i] = this._data[i] * tensor._data[i];
+        }
+
+        return result;
+    }
+
     /**
      * Computes a row-vector product on the tensor
      * 

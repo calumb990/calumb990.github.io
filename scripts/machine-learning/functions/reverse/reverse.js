@@ -35,7 +35,7 @@ class ReverseFunction {
         // The step method hook
         this.step = (optimiser) => {
             step?.call(this, optimiser);
-            this.#composite?.step(optimiser);
+            this.#composite?.step?.(optimiser);
         }
 
         const forwards = this.forwards;
