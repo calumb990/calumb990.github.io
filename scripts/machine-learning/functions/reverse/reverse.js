@@ -1,11 +1,12 @@
 import { NumTensor } from "../../tensor.js";
+import { ReverseLossFunction } from "../loss/loss.js";
 
 class ReverseFunction {
 
     /**
      * The write-only activation function
      * 
-     * @type {ActivationFunction}
+     * @type {ReverseFunction | ReverseLossFunction}
      */
     #composite;
 
@@ -34,7 +35,7 @@ class ReverseFunction {
         // The step method hook
         this.step = (optimiser) => {
             step?.call(this, optimiser);
-            this.#composite.step(optimiser);
+            this.#composite?.step(optimiser);
         }
 
         const forwards = this.forwards;

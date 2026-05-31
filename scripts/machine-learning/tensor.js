@@ -47,11 +47,6 @@ class Tensor {
     at(indices) {
         let index = 0;
 
-        // If number, simply index the array
-        if (typeof(indices) === "number") {
-            return this._data[indices];
-        }
-
         // Calculate the index from _strides
         for (let i = 0; i < indices.length; i++) {
             index += this._strides[i] * indices[i];
